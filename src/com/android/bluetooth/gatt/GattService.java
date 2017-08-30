@@ -1650,6 +1650,8 @@ public class GattService extends ProfileService {
         int position = 0;
         long now = SystemClock.elapsedRealtimeNanos();
         while (position < batchRecord.length) {
+            if (position + 6 >= batchRecord.length)
+                break;
             byte[] address = extractBytes(batchRecord, position, 6);
             // TODO: remove temp hack.
             reverse(address);
@@ -1659,15 +1661,30 @@ public class GattService extends ProfileService {
             position++;
             // Skip tx power level.
             position++;
+            if (position >= batchRecord.length)
+                break;
             int rssi = batchRecord[position++];
+            if ((position + 2) >= batchRecord.length)
+                break;
             long timestampNanos = now - parseTimestampNanos(extractBytes(batchRecord, position, 2));
+            if (timestampNanos < 0)
+                break;
             position += 2;
 
             // Combine advertise packet and scan response packet.
+            if (position >= batchRecord.length)
+                break;
             int advertisePacketLen = batchRecord[position++];
+            if ((advertisePacketLen < 0) || ((position + advertisePacketLen) >= batchRecord.length))
+                break;
             byte[] advertiseBytes = extractBytes(batchRecord, position, advertisePacketLen);
             position += advertisePacketLen;
+            if (position >= batchRecord.length)
+                break;
             int scanResponsePacketLen = batchRecord[position++];
+            if ((scanResponsePacketLen < 0) ||
+               ((position + scanResponsePacketLen) >= batchRecord.length))
+                break;
             byte[] scanResponseBytes = extractBytes(batchRecord, position, scanResponsePacketLen);
             position += scanResponsePacketLen;
             byte[] scanRecord = new byte[advertisePacketLen + scanResponsePacketLen];
