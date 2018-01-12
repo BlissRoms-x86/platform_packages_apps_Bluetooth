@@ -49,6 +49,7 @@ import android.os.Message;
 import android.os.ParcelUuid;
 import android.os.SystemClock;
 import android.support.annotation.VisibleForTesting;
+import android.os.UserHandle;
 import android.util.Log;
 import android.util.Pair;
 
@@ -1806,7 +1807,7 @@ public class HeadsetClientStateMachine extends StateMachine {
                 intent.putExtra(BluetoothHeadsetClient.EXTRA_AG_FEATURE_MERGE_AND_DETACH, true);
             }
         }
-        mService.sendBroadcast(intent, ProfileService.BLUETOOTH_PERM);
+        mService.sendBroadcastAsUser(intent, UserHandle.ALL, ProfileService.BLUETOOTH_PERM);
     }
 
     boolean isConnected() {
