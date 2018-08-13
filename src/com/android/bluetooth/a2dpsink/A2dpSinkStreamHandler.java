@@ -113,7 +113,7 @@ public class A2dpSinkStreamHandler extends Handler {
             case SRC_STR_START:
                 mStreamAvailable = true;
                 // Always request audio focus if on TV.
-                if (isTvDevice()) {
+                if (isTvDevice() || isAutomotiveDevice()) {
                     if (mAudioFocus == AudioManager.AUDIOFOCUS_NONE) {
                         requestAudioFocus();
                     }
@@ -378,4 +378,7 @@ public class A2dpSinkStreamHandler extends Handler {
         return mContext.getPackageManager().hasSystemFeature(PackageManager.FEATURE_LEANBACK);
     }
 
+    private boolean isAutomotiveDevice() {
+        return mContext.getPackageManager().hasSystemFeature(PackageManager.FEATURE_AUTOMOTIVE);
+    }
 }
