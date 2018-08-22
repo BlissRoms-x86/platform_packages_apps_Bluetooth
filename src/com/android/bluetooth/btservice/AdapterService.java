@@ -1435,6 +1435,12 @@ public class AdapterService extends Service {
             if (service == null) {
                 return false;
             }
+            BluetoothDevice[] bondedDeviceList = getBondedDevices();
+            if (bondedDeviceList != null) {
+                for (BluetoothDevice device : bondedDeviceList) {
+                    service.removeBond(device);
+                }
+            }
             service.disable();
             return service.factoryReset();
 
