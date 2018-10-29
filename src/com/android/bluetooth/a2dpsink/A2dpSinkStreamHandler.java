@@ -117,10 +117,8 @@ public class A2dpSinkStreamHandler extends Handler {
                         requestAudioFocus();
                     }
                 }
-                // Audio stream has started, stop it if we don't have focus.
-                if (mAudioFocus == AudioManager.AUDIOFOCUS_NONE) {
-                    sendAvrcpPause();
-                } else {
+                // Audio stream has started.
+                if (mAudioFocus != AudioManager.AUDIOFOCUS_NONE) {
                     startAvrcpUpdates();
                 }
                 break;
@@ -149,7 +147,7 @@ public class A2dpSinkStreamHandler extends Handler {
                 mStreamAvailable = true;
                 // Remote play command.
                 // If is an iot device gain focus and start avrcp updates.
-                if (isIotDevice() || isTvDevice()) {
+                if (isIotDevice() || isTvDevice() || isAutomotiveDevice()) {
                     if (mAudioFocus == AudioManager.AUDIOFOCUS_NONE) {
                         requestAudioFocus();
                     }
